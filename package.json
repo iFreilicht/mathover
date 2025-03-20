@@ -1,6 +1,6 @@
 {
-  "name": "mathover2",
-  "displayName": "mathover2",
+  "name": "mathover",
+  "displayName": "mathover",
   "description": "Preview math formulas in comments, docstrings or plain text files",
   "version": "0.0.1",
   "engines": {
@@ -9,15 +9,86 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onLanguage"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "mathover2.helloWorld",
+        "command": "mathover.helloWorld",
         "title": "Hello World"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Mathover",
+      "properties": {
+        "mathover.format": {
+          "type": "string",
+          "enum": [
+            "TeX",
+            "inline-TeX",
+            "MathML"
+          ],
+          "default": "TeX",
+          "description": "Math format"
+        },
+        "mathover.matchRegex": {
+          "title": "Match Regex",
+          "default": "#\\sMath:\\s(.+)",
+          "type": "string",
+          "description": "Regex to match math section."
+        },
+        "mathover.matchRegexFlags": {
+          "title": "Match Regex Flags",
+          "default": "gm",
+          "type": "string",
+          "description": "Flags for regex to match the math section."
+        },
+        "mathover.cacheSize": {
+          "title": "Cache Size",
+          "default": 1024,
+          "type": "number",
+          "description": "Number of cache entries."
+        },
+        "mathover.updateInterval": {
+          "title": "Update Interval",
+          "default": 500,
+          "type": "number",
+          "description": "Number of milliseconds between decoration updates."
+        },
+        "mathover.svgTextColor": {
+          "title": "SVG Text color",
+          "default": "#dddddd",
+          "type": "string",
+          "description": "Text color of hover image."
+        },
+        "mathover.svgBackgroundColor": {
+          "title": "SVG Background color",
+          "default": "auto",
+          "type": "string",
+          "description": "Background color of hover image."
+        },
+        "mathover.correctDecorationType": {
+          "title": "Correct Decoration Type",
+          "description": "Decoration style for correct syntax matches.",
+          "type": "object",
+          "default": {
+            "cursor": "help",
+            "borderWidth": "1px",
+            "borderStyle": "dashed",
+            "overviewRulerLane": 4,
+            "overviewRulerColor": "blue",
+            "light": {
+              "borderColor": "darkblue"
+            },
+            "dark": {
+              "borderColor": "lightblue"
+            }
+          }
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
