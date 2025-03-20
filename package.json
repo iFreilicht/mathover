@@ -112,6 +112,6 @@
   "dependencies": {
     "@types/mathjax": "^0.0.40",
     "datauri": "^4.1.0",
-    "mathjax": "^3.2.2"
+    "mathjax-full": "^3.2.2"
   }
 }

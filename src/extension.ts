@@ -1,56 +1,57 @@
 import assert from "assert";
 import config from "./config";
+import { Tex2Svg } from "./tex2svg";
 import * as vscode from 'vscode';
 
-async function updateDecorations() {
-
-	let activeEditor = vscode.window.activeTextEditor;
-	if (!activeEditor) {
-		return;
-	}
-
-	// "d" flag is required to know indices of match groups
-	const matchRegEx = new RegExp(config.matchReg, config.matchRegFlags + "d");
-
-	const text = activeEditor.document.getText();
-	const wrongUsage: vscode.DecorationOptions[] = [];
-	const correctUsage: vscode.DecorationOptions[] = [];
-	let match;
-	while ((match = matchRegEx.exec(text))) {
-		const group1 = match[1];
-		const groupMath = match.groups?.math;
-		
-		const useNamedGroup = groupMath !== undefined;
-		const latex = useNamedGroup ? groupMath : group1;
-
-		const indices = match.indices;
-		// "d" flag was passed, indices will be present
-		assert(indices !== undefined)
-
-		const [start, end] = useNamedGroup ? indices.groups!.math : indices[1];
-		const startPos = activeEditor.document.positionAt(start);
-		const endPos = activeEditor.document.positionAt(end);
-		const range = new vscode.Range(startPos, endPos);
-
-		console.log(`Match: ${match[0]}, match index: ${match.index}, match length: ${match[0].length}, processed: ${latex}`);
-
-		// const hoverUri = await tex2Svg.render(latex);
-		// const decoration = { range: range, hoverMessage: hoverUri.text };
-		const decoration = { range: range, hoverMessage: "Test!"};
-
-		// if (hoverUri.error) {
-		// 	wrongUsage.push(decoration);
-		// } else {
-		// 	correctUsage.push(decoration);
-		// }
-		correctUsage.push(decoration)
-	}
-	activeEditor.setDecorations(config.correctDecorationType, correctUsage);
-}
 
 export function activate(context: vscode.ExtensionContext) {
+	const tex2Svg = new Tex2Svg(config.cacheSize);
 	let timeout: NodeJS.Timeout | undefined = undefined;
 	let activeEditor = vscode.window.activeTextEditor;
+
+	async function updateDecorations() {
+
+		let activeEditor = vscode.window.activeTextEditor;
+		if (!activeEditor) {
+			return;
+		}
+
+		// "d" flag is required to know indices of match groups
+		const matchRegEx = new RegExp(config.matchReg, config.matchRegFlags + "d");
+
+		const text = activeEditor.document.getText();
+		const wrongUsage: vscode.DecorationOptions[] = [];
+		const correctUsage: vscode.DecorationOptions[] = [];
+		let match;
+		while ((match = matchRegEx.exec(text))) {
+			const group1 = match[1];
+			const groupMath = match.groups?.math;
+			
+			const useNamedGroup = groupMath !== undefined;
+			const latex = useNamedGroup ? groupMath : group1;
+
+			const indices = match.indices;
+			// "d" flag was passed, indices will be present
+			assert(indices !== undefined)
+
+			const [start, end] = useNamedGroup ? indices.groups!.math : indices[1];
+			const startPos = activeEditor.document.positionAt(start);
+			const endPos = activeEditor.document.positionAt(end);
+			const range = new vscode.Range(startPos, endPos);
+
+			console.log(`Match: ${match[0]}, match index: ${match.index}, match length: ${match[0].length}, processed: ${latex}`);
+
+			const hoverUri = await tex2Svg.render(latex);
+			const decoration = { range: range, hoverMessage: hoverUri.text };
+
+			if (hoverUri.error) {
+				wrongUsage.push(decoration);
+			} else {
+				correctUsage.push(decoration);
+			}
+		}
+		activeEditor.setDecorations(config.correctDecorationType, correctUsage);
+	}
 
 	// The command has been defined in the package.json file // Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
