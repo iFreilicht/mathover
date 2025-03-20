@@ -1,4 +1,0 @@
-{
-	// "mathover.matchRegex": "((\\s\\$+)[^$\\n]+?(\\$+))"
-	"mathover.matchRegex": "#\\sMath:\\s(.+)"
-}
