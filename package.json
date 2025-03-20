@@ -58,30 +58,6 @@
           "type": "string",
           "description": "Flags for regex to match the math section."
         },
-        "mathover.wrongRegex": {
-          "title": "Wrong Regex",
-          "default": "\\$",
-          "type": "string",
-          "description": "Regex to match wrong syntax."
-        },
-        "mathover.wrongRegexFlags": {
-          "title": "Wrong Regex Flags",
-          "default": "g",
-          "type": "string",
-          "description": "Flags for regex to match wrong syntax."
-        },
-        "mathover.forwardSkip": {
-          "title": "Forward Skip",
-          "default": 8,
-          "type": "number",
-          "description": "Number of characters to skip from the beginning of the match."
-        },
-        "mathover.backwardSkip": {
-          "title": "Backward Skip",
-          "default": 0,
-          "type": "number",
-          "description": "Number of characters to skip from the end of the match."
-        },
         "mathover.cacheSize": {
           "title": "Cache Size",
           "default": 1024,
